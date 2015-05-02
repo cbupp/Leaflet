@@ -51,10 +51,13 @@ L.Renderer = L.Layer.extend({
 	},
 
 	_update: function () {
+		//TODO: calculate rotationPadding based off of rotation to minimize memory size
 		// update pixel bounds of renderer container (for positioning/sizing/clipping later)
-		var p = this.options.padding,
-		    size = this._map.getSize(),
-		    min = this._map.containerPointToLayerPoint(size.multiplyBy(-p)).round();
+		var size = this._map.getSize(),
+			sizeHypotenuse = Math.sqrt(size.x * size.x + size.y * size.y),
+			rotationPadding = (sizeHypotenuse - Math.min(size.x, size.y)) / sizeHypotenuse,
+			p = this.options.padding + rotationPadding,
+			min = this._map.containerPointToLayerPoint(size.multiplyBy(-p)).round();
 
 		this._bounds = new L.Bounds(min, min.add(size.multiplyBy(1 + p * 2)).round());
 	}
