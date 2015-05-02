@@ -33,6 +33,10 @@ L.Map = L.Evented.extend({
 			this.setMaxBounds(options.maxBounds);
 		}
 
+		if (options.rotation !== undefined) {
+			this._rotation = options.rotation;
+		}
+
 		if (options.zoom !== undefined) {
 			this._zoom = this._limitZoom(options.zoom);
 		}
@@ -58,6 +62,11 @@ L.Map = L.Evented.extend({
 	setView: function (center, zoom) {
 		zoom = zoom === undefined ? this.getZoom() : zoom;
 		this._resetView(L.latLng(center), this._limitZoom(zoom));
+		return this;
+	},
+
+	setRotation: function (rotation) {
+		this._rotation = rotation;
 		return this;
 	},
 
@@ -292,6 +301,10 @@ L.Map = L.Evented.extend({
 			return this._initialCenter;
 		}
 		return this.layerPointToLatLng(this._getCenterLayerPoint());
+	},
+
+	getRotation: function() {
+		return this._rotation;
 	},
 
 	getZoom: function () {
