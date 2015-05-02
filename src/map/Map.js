@@ -35,6 +35,8 @@ L.Map = L.Evented.extend({
 
 		if (options.rotation !== undefined) {
 			this._rotation = options.rotation;
+		} else {
+			this._rotation = 0;
 		}
 
 		if (options.zoom !== undefined) {
