@@ -142,8 +142,18 @@ L.DomUtil = {
 	setTransform: function (el, offset, scale) {
 		var pos = offset || new L.Point(0, 0);
 
+		var transform = el.style[L.DomUtil.TRANSFORM];
+		transform = transform.replace(/[ ]*translate3d[(][^)]*[)]/i, '') + ' translate3d(' + pos.x + 'px,' + pos.y + 'px' + ',0)';
+		transform = transform.replace(/[ ]*scale[(][^)]*[)]/i, '') + (scale ? ' scale(' + scale + ')' : '');
+		el.style[L.DomUtil.TRANSFORM] = transform;
+
+		el.style['transform-origin'] = (300 + -1 * pos.x) + 'px ' + (300 + -1 * pos.y) + 'px 0';
+	},
+
+	setRotation: function (el, rotation) {
 		el.style[L.DomUtil.TRANSFORM] =
-			'translate3d(' + pos.x + 'px,' + pos.y + 'px' + ',0)' + (scale ? ' scale(' + scale + ')' : '');
+			el.style[L.DomUtil.TRANSFORM]
+				.replace(/[ ]*rotate[(][^)]*[)]/i, '') + (rotation ? ' rotate(' + rotation + 'rad)' : '');
 	},
 
 	setPosition: function (el, point, no3d) { // (HTMLElement, Point[, Boolean])

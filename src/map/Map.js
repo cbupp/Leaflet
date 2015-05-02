@@ -67,6 +67,9 @@ L.Map = L.Evented.extend({
 
 	setRotation: function (rotation) {
 		this._rotation = rotation;
+
+		L.DomUtil.setRotation(this._mapPane, rotation);
+
 		return this;
 	},
 
