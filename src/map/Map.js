@@ -553,7 +553,7 @@ L.Map = L.Evented.extend({
 			L.DomUtil.setPosition(this._mapPane, new L.Point(0, 0));
 		}
 
-		L.DomUtil.setRotation(this._mapPane, this.getRotation());
+		L.DomUtil.setRotation(this._mapPane, this.getRotation(), this.getSize().divideBy(2));
 
 		this._pixelOrigin = this._getNewPixelOrigin(center);
 

@@ -240,7 +240,18 @@ L.Popup = L.Layer.extend({
 
 	_updateRotation: function () {
 		if (!this._map) { return; }
-		L.DomUtil.setRotation(this._container, -1 * this._map.getRotation());
+
+		var pos = this._map.latLngToLayerPoint(this._latlng),
+			offset = L.point(this.options.offset);
+
+		if (!this._zoomAnimated) {
+			offset = offset.add(pos);
+		}
+
+		var bottom = this._containerBottom = -offset.y,
+			left = this._containerLeft = (this._containerWidth / 2) + offset.x;
+
+		L.DomUtil.setRotation(this._container, -1 * this._map.getRotation(), new L.Point(left, this._container.clientHeight + bottom));
 	},
 
 	_animateZoom: function (e) {

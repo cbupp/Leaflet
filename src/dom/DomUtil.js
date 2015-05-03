@@ -146,14 +146,18 @@ L.DomUtil = {
 		transform = transform.replace(/[ ]*translate3d[(][^)]*[)]/i, '') + ' translate3d(' + pos.x + 'px,' + pos.y + 'px' + ',0)';
 		transform = transform.replace(/[ ]*scale[(][^)]*[)]/i, '') + (scale ? ' scale(' + scale + ')' : '');
 		el.style[L.DomUtil.TRANSFORM] = transform;
-
-		el.style['transform-origin'] = (300 + -1 * pos.x) + 'px ' + (300 + -1 * pos.y) + 'px 0';
 	},
 
-	setRotation: function (el, rotation) {
+	setRotation: function (el, rotation, center) {
 		el.style[L.DomUtil.TRANSFORM] =
 			el.style[L.DomUtil.TRANSFORM]
-				.replace(/[ ]*rotate[(][^)]*[)]/i, '') + (rotation ? ' rotate(' + rotation + 'rad)' : '');
+				.replace(/[ ]*rotate[(][^)]*[)]/i, '') + (rotation ? ' rotate(' + rotation.toFixed(4) + 'rad)' : '');
+
+		if (center === undefined) {
+			center = new L.Point(el.clientWidth, el.clientHeight).divideBy(2);
+		}
+
+		el.style['transform-origin'] = (center.x) + 'px ' + (center.y) + 'px 0';
 	},
 
 	setPosition: function (el, point, no3d) { // (HTMLElement, Point[, Boolean])
