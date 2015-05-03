@@ -234,6 +234,13 @@ L.Popup = L.Layer.extend({
 		// bottom position the popup in case the height of the popup changes (images loading etc)
 		this._container.style.bottom = bottom + 'px';
 		this._container.style.left = left + 'px';
+
+		this._updateRotation();
+	},
+
+	_updateRotation: function () {
+		if (!this._map) { return; }
+		L.DomUtil.setRotation(this._container, -1 * this._map.getRotation());
 	},
 
 	_animateZoom: function (e) {

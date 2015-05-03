@@ -69,9 +69,7 @@ L.Map = L.Evented.extend({
 
 	setRotation: function (rotation) {
 		this._rotation = rotation;
-
-		L.DomUtil.setRotation(this._mapPane, rotation);
-
+		this._resetView(this.getCenter(), this.getZoom());
 		return this;
 	},
 
@@ -554,6 +552,8 @@ L.Map = L.Evented.extend({
 		if (!preserveMapOffset) {
 			L.DomUtil.setPosition(this._mapPane, new L.Point(0, 0));
 		}
+
+		L.DomUtil.setRotation(this._mapPane, this.getRotation());
 
 		this._pixelOrigin = this._getNewPixelOrigin(center);
 
