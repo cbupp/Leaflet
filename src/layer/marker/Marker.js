@@ -179,10 +179,18 @@ L.Marker = L.Layer.extend({
 	},
 
 	_setPos: function (pos) {
+		var offset;
+		if (this.options.icon !== undefined && this.options.icon.options !== undefined && this.options.icon.options.iconAnchor !== undefined) {
+			offset = new L.Point(this.options.icon.options.iconAnchor[0], this.options.icon.options.iconAnchor[1]);
+		} else {
+			offset = new L.Point(0, 0);
+		}
 		L.DomUtil.setPosition(this._icon, pos);
+		L.DomUtil.setRotation(this._icon, -1 * this._map.getRotation(), offset);
 
 		if (this._shadow) {
 			L.DomUtil.setPosition(this._shadow, pos);
+			L.DomUtil.setRotation(this._shadow, -1 * this._map.getRotation(), offset);
 		}
 
 		this._zIndex = pos.y + this.options.zIndexOffset;
