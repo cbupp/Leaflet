@@ -464,13 +464,13 @@ L.Map = L.Evented.extend({
 	},
 
 	layerPointToContainerPoint: function (point) { // (Point)
-		var p = this._getMapPanePos().add(L.point(point));
+		var p = L.point(point).add(this._getMapPanePos());
 		var rotation = this.getRotation();
 		if (rotation === 0) {
-			return this._getMapPanePos().add(p);
+			return p;
 		}
 
-		var center = this._getCenterLayerPoint();
+		var center = this._getCenterLayerPoint().clone();
 		var centerOffset = center.subtract(p);
 		//convert to polar
 		var r = center.distanceTo(p);
