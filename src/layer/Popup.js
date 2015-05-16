@@ -265,14 +265,13 @@ L.Popup = L.Layer.extend({
 		var map = this._map,
 		    containerHeight = this._container.offsetHeight,
 		    containerWidth = this._containerWidth,
-		    layerPos = new L.Point(this._containerLeft, -containerHeight - this._containerBottom);
+			containerPos = new L.Point(-this._containerLeft, -containerHeight - this._containerBottom);
 
 		if (this._zoomAnimated) {
-			layerPos._add(L.DomUtil.getPosition(this._container));
+			containerPos._add(map.layerPointToContainerPoint(L.DomUtil.getPosition(this._container)));
 		}
 
-		var containerPos = map.layerPointToContainerPoint(layerPos),
-		    padding = L.point(this.options.autoPanPadding),
+		var padding = L.point(this.options.autoPanPadding),
 		    paddingTL = L.point(this.options.autoPanPaddingTopLeft || padding),
 		    paddingBR = L.point(this.options.autoPanPaddingBottomRight || padding),
 		    size = map.getSize(),
@@ -293,9 +292,12 @@ L.Popup = L.Layer.extend({
 		}
 
 		if (dx || dy) {
+			var originalLayerPos = map.containerPointToLayerPoint(containerPos);
+			var adjustedLayerPos = map.containerPointToLayerPoint(containerPos.subtract([dx, dy]));
+			var containerOffset = originalLayerPos.subtract(adjustedLayerPos);
 			map
 			    .fire('autopanstart')
-			    .panBy([dx, dy]);
+				.panBy([containerOffset.x, containerOffset.y]);
 		}
 	},
 
