@@ -149,6 +149,12 @@ L.DomUtil = {
 	},
 
 	setRotation: function (el, rotation, center) {
+
+		/*eslint-disable */
+		el._leaflet_rotation = rotation;
+		el._leaflet_rotation_center = center;
+		/*eslint-enable */
+
 		el.style[L.DomUtil.TRANSFORM] =
 			el.style[L.DomUtil.TRANSFORM]
 				.replace(/[ ]*rotate[(][^)]*[)]/i, '') + (rotation ? ' rotate(' + rotation.toFixed(4) + 'rad)' : '');
@@ -158,6 +164,20 @@ L.DomUtil = {
 		}
 
 		el.style['transform-origin'] = (center.x) + 'px ' + (center.y) + 'px 0';
+	},
+
+	getRotation: function (el) {
+		// this method is only used for elements previously positioned using setRotation,
+		// so it's safe to cache the position for performance
+
+		return el._leaflet_rotation;
+	},
+
+	getRotationCenter: function (el) {
+		// this method is only used for elements previously positioned using setRotation,
+		// so it's safe to cache the position for performance
+
+		return el._leaflet_rotation_center;
 	},
 
 	setPosition: function (el, point, no3d) { // (HTMLElement, Point[, Boolean])
