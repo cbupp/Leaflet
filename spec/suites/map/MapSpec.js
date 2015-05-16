@@ -611,4 +611,21 @@ describe("Map", function () {
 
 	});
 
+	describe('#rotate', function() {
+		it('convert container point to layer point and back with rotation', function (done) {
+			map.setView([0, 0], 0);
+			var originalPoint = new L.Point(12.34, 11.23);
+
+			for (var r = 0; r < 17; r++) {
+				map.setRotation((Math.PI * r) / 16);
+				var interimPoint = map.containerPointToLayerPoint(originalPoint);
+				var comparePoint = map.layerPointToContainerPoint(interimPoint);
+				comparePoint = L.point(comparePoint.x.toFixed(2), comparePoint.y.toFixed(2));
+				expect(originalPoint).to.eql(comparePoint);
+			}
+
+			done();
+		});
+	});
+
 });

@@ -444,11 +444,43 @@ L.Map = L.Evented.extend({
 	},
 
 	containerPointToLayerPoint: function (point) { // (Point)
-		return L.point(point).subtract(this._getMapPanePos());
+		var p = L.point(point);
+		var rotation = this.getRotation();
+		var center = this.getSize()._divideBy(2);
+		if (rotation === 0 || center.equals(p)) {
+			return p.subtract(this._getMapPanePos());
+		}
+		var centerOffset = center.subtract(p);
+		//convert to polar
+		var r = center.distanceTo(p);
+		var theta = Math.atan2(centerOffset.y, centerOffset.x);
+		//apply counter rotation
+		theta = theta - rotation;
+		//convert back to cartesian
+		var rotatedCenterOffset = L.point(r * Math.cos(theta), r * Math.sin(theta));
+		var rotatedPoint = center.subtract(rotatedCenterOffset);
+
+		return rotatedPoint.subtract(this._getMapPanePos());
 	},
 
 	layerPointToContainerPoint: function (point) { // (Point)
-		return L.point(point).add(this._getMapPanePos());
+		var p = this._getMapPanePos().add(L.point(point));
+		var rotation = this.getRotation();
+		if (rotation === 0) {
+			return this._getMapPanePos().add(p);
+		}
+
+		var center = this._getCenterLayerPoint();
+		var centerOffset = center.subtract(p);
+		//convert to polar
+		var r = center.distanceTo(p);
+		var theta = Math.atan2(centerOffset.y, centerOffset.x);
+		//apply counter rotation
+		theta = theta + rotation;
+		//convert back to cartesian
+		var rotatedCenterOffset = L.point(r * Math.cos(theta), r * Math.sin(theta));
+		var rotatedPoint = center.subtract(rotatedCenterOffset);
+		return rotatedPoint;
 	},
 
 	containerPointToLatLng: function (point) {
